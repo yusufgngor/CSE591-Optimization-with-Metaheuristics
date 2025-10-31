@@ -1,0 +1,149 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{subcaption} % optional: for subfigures
+\usepackage{amsmath}
+
+% -------------------------
+% BIBLIOGRAPHY (BibTeX) SETUP
+% -------------------------
+% --- Option A: Author–Year citations (APA-like) ---
+\usepackage[round]{natbib}          % \citet (Smith, 2020), \citep (Smith, 2020)
+\bibliographystyle{apalike}         % or plainnat, abbrvnat, etc.
+
+% --- Option B: Numeric citations (IEEE-like) ---
+% \usepackage[numbers,sort&compress]{natbib}  % [1], [2–4]
+% \bibliographystyle{IEEEtran}
+
+% Clickable links (keep last)
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% Page style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\fancyhead[L]{CSE480/591 - Optimization with Metaheuristics}
+\fancyhead[R]{Yeditepe University}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\setstretch{1.2}
+
+\begin{document}
+
+% -------------------------
+% TITLE PAGE
+% -------------------------
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.5\textwidth]{yeditepe_logo.png}\\[1cm]  % Replace with correct path
+    {\Large \textbf{YEDITEPE UNIVERSITY}}\\[4pt]
+    {\large Faculty of Engineering}\\[2pt]
+    {\large Department of Computer Engineering}\\[2cm]
+    {\huge \textbf{Term Project Report}}\\[0.4cm]
+    {\Large CSE480/591: Optimization with Metaheuristics}\\[1cm]
+    \vfill
+    \begin{flushleft}
+    %Delete \underline{\hspace{8cm}} and replace with your information
+    \textbf{Student Name:} \underline{Yusuf Güngör}\\[8pt]
+    \textbf{Student ID:} \underline{20243505010-2D}\\[8pt]
+    \textbf{Date:} \underline{October 31, 2025}\\[8pt]
+    \textbf{Project Title:} \underline{Parallel Metaheuristic-Based Rule Optimization for GPU-Accelerated Firewalls}\\[2cm]
+    \end{flushleft}
+    \vfill
+    {\large \textbf{Instructor:} Asst. Prof. Dr. Gizem Süngü Terci}\\[0.3cm]
+    {\large Fall 2025 Semester}\\[1cm]
+\end{titlepage}
+
+\newpage
+
+% -------------------------
+% MAIN CONTENT
+% -------------------------
+
+\section{Selected Problem and Motivation}
+The problem of optimizing firewall rule order is a critical task in network security. Firewalls process network packets by sequentially matching them against a list of rules. The order of these rules can significantly impact performance, as a poorly ordered list can lead to increased latency and reduced throughput. The goal is to find an optimal rule permutation that minimizes the cost of packet processing. This problem is known to be NP-hard, making it an excellent candidate for metaheuristic optimization techniques. This study focuses on applying and analyzing metaheuristic approaches to solve the firewall rule ordering problem, drawing inspiration from recent advancements in the field \citep{coscia2023innovative}.
+
+\section{Formal Problem Definition}
+
+\subsection{Decision Variables}
+The decision variables are represented by a binary matrix $x$, where $x_{ij} = 1$ if rule $i$ is placed at position $j$ in the firewall policy, and $x_{ij} = 0$ otherwise. Here, $i$ represents the rule index and $j$ represents the position index, both ranging from $1$ to $N$, where $N$ is the total number of rules.
+\subsection{Objective Function}
+The objective is to minimize the total cost of processing packets, which is a function of the rule order. The objective function is formulated as follows:
+\begin{equation}
+\min \sum_{i=1}^{N} \sum_{j=1}^{N} p_i j x_{ij}
+\end{equation}
+where $p_i$ is the probability of a packet matching rule $i$, and $j$ is the position of rule $i$. This function aims to place rules with a higher probability of being matched (higher $p_i$) at earlier positions (lower $j$) to reduce the average number of comparisons.
+\subsection{Constraints}
+The optimization is subject to several constraints to ensure a valid rule permutation:
+\begin{enumerate}
+    \item Each position in the policy must be occupied by exactly one rule:
+    \begin{equation}
+    \sum_{i=1}^{N} x_{ij} = 1, \quad \forall j \in \{1, 2, ..., N\}
+    \end{equation}
+    \item Each rule must be placed in exactly one position:
+    \begin{equation}
+    \sum_{j=1}^{N} x_{ij} = 1, \quad \forall i \in \{1, 2, ..., N\}
+    \end{equation}
+    \item Precedence constraints must be maintained. If rule $i$ must precede rule $j$ (denoted by $\rho_{ij} = 1$), then the position of rule $i$ must be less than the position of rule $j$:
+    \begin{equation}
+    \sum_{k=1}^{N} k x_{ik} - \sum_{k=1}^{N} k x_{jk} \leq -1 \quad \text{if } \rho_{ij} = 1
+    \end{equation}
+    \item The decision variables must be binary:
+    \begin{equation}
+    x_{ij} \in \{0, 1\}, \quad \forall i, j \in \{1, 2, ..., N\}
+    \end{equation}
+\end{enumerate}
+
+\section{Dataset or Benchmark Instances}
+For this study, we will utilize the "Internet Firewall Data" dataset from the UCI Machine Learning Repository \citep{internet_firewall_data_542}. This dataset provides real-world firewall log data, which can be used to derive rule properties and traffic patterns. Additionally, we will refer to the work by \citet{coscia2023innovative} for benchmark instances and comparison methodologies. These resources will provide the necessary foundation for evaluating the performance of our metaheuristic optimization algorithms.
+
+\section{\textcolor{gray}{Example Scenario/Problem Instance}}
+\textcolor{red}{This section belongs to the second progress of the term project... Do not consider now.}
+
+\section{\textcolor{gray}{Proposed Approach}}
+\textcolor{blue}{This section with its subsections belongs to the third progress of the term project... Do not consider now.}
+\subsection{\textcolor{gray}{Overview Design and/or General Algorithm}}
+\subsection{\textcolor{gray}{Component 1 of Your Algorithm}}
+\subsection{\textcolor{gray}{Component 2 of Your Algorithm}}
+
+\section{\textcolor{gray}{Experimental Study}}
+\textcolor{green}{This section with its subsections belongs to the fourth progress of the term project... Do not consider now.}
+\subsection{\textcolor{gray}{Experimental Setup}}
+\subsubsection{\textcolor{gray}{Test Environment}}
+\subsubsection{\textcolor{gray}{Parameter Setting}}
+\subsection{\textcolor{gray}{Experimental Results}}
+
+\section{\textcolor{gray}{Discussion and Conclusion}}
+\textcolor{orange}{This section belongs to the final report of the term project... Do not consider now.}
+
+\section{References}
+List any papers, datasets, or sources that define your problem or approach. Use a consistent citation style.
+
+\vfill
+\begin{center}
+    \textit{Submit your report as a single PDF file on YULearn.}\\[4pt]
+    \textit{File name format: \textbf{TP1\_Name\_Topic.pdf}}\\[4pt]
+    \textit{Deadline: 31.10.2025, 23:59}
+\end{center}
+
+% -------------------------
+% BIBLIOGRAPHY (BibTeX database called "references.bib")
+% -------------------------
+\bibliography{references}
+
+\end{document}
